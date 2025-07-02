@@ -1,31 +1,67 @@
-# NLP-project---classement-de-texte-selon-toxicit-
-NLP project - classement de texte selon toxicité
+# NLP Project – Classification de commentaires selon leur toxicité
 
-#le but de ce premier projet NLP est de se familiariser avec les bases du Traitement automatique
-#du langage naturel et de l'analyse de sentiment
-#je vais réutiliser les techniques de l'exercise kaggle et des tweets de Trump
-#la prédiction se fera en entrainant un classifieur, plusieurs si le premier ne donne pas satisfaction
+Ce projet a été réalisé dans le cadre de mon apprentissage du traitement automatique du langage naturel (NLP). L’objectif était de m’initier à l’analyse de texte brut, à la vectorisation et à la classification supervisée, à partir de données publiques issues d’un concours Kaggle.
 
-#cela nous servira de base pour le prochain projet, qui sera plus complexe
+## 🎯 Objectif
 
+Classer automatiquement les commentaires en ligne selon plusieurs types de toxicité :
 
-- Quel était le problème ?
-Mon objectif est de me former au NLP, je n'avais fairt qu'un exercice lors de ma formation. Je souhaite donc faire 2 ou 3 projets autour de cette thématique.
-Celui ci est le plus simple, l'objectif est d'acquérir les bases nécéssaires au NLP.
+- `toxic`
+- `severe_toxic`
+- `obscene`
+- `threat`
+- `insult`
+- `identity_hate`
 
-- Quelle méthode avez-vous suivi pour le résoudre ?
+## 🗃 Données
 
-analyse et nettoyage des données, regex pour épurer les données textuelles, tokenize, exploration des mots ainsi constituées ainsi que la longueur des phrases, vectorisation via TFIDF, classification avec une régression logistique. 
+Les données sont issues du jeu de données [Toxic Comment Classification Challenge – Kaggle](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge):
 
-- Quels outils avez-vous choisi ?
+- `train.csv` : 160 000 commentaires avec labels (multi-label)
+- `test.csv` : 150 000 commentaires sans labels
 
-regex, RegexpTokenizer, TfidfVectorizer, train_test_split, logisticregression, et les habituelles
+## 🔧 Pipeline de traitement
 
+### 1. **Prétraitement des données**
+- Nettoyage des textes (regex, suppression de liens, chiffres, caractères spéciaux, etc.)
+- Tokenisation (`RegexpTokenizer`)
+- Analyse de la longueur des phrases et vocabulaire
 
-- Éventuellement, quelques remarques sur le code programmé.
+### 2. **Vectorisation**
+- Utilisation de la méthode **TF-IDF** (`TfidfVectorizer`)
+- Application sur l’ensemble des textes
 
-J'ai du détailler le code autour de Tfid pour le comprendre. C'est éltape qui manquait dans l'exercise Tweets de Trump pour faire le lien entre les données textuelles et la classification
+### 3. **Modélisation**
+- Entraînement d’un modèle de **régression logistique** pour chaque label (multi-sortie)
+- Évaluation empirique des résultats via inspection des prédictions
+- Génération d’un fichier de soumission (`submission.csv`) avec les probabilités de toxicité
 
-- Des exemples de résultats obtenus.
+## ⚙️ Outils et bibliothèques
 
-Voyez le fichier Submission, et la capture d'écran de celui ci avant son export sous format .csv
+- `pandas`, `numpy`, `matplotlib`, `seaborn`
+- `nltk`, `scikit-learn`
+- `re` pour les expressions régulières
+
+## 📊 Résultats
+
+Le modèle a généré des probabilités de classification pour chaque commentaire sur les six dimensions. À cette étape, aucune métrique n’a été calculée, l’objectif étant d’établir un prototype simple et fonctionnel.
+
+Exemple de sortie (`submission.csv`) :
+
+| id              | toxic | severe_toxic | obscene | threat | insult | identity_hate |
+|-----------------|-------|--------------|---------|--------|--------|----------------|
+| 00001cee341fdb12 | 0.997 | 0.160        | 0.992   | 0.039  | 0.948  | 0.246          |
+| ...             | ...   | ...          | ...     | ...    | ...    | ...            |
+
+## 🧠 Perspectives
+
+Ce projet constitue une première approche des problématiques NLP. Il servira de base pour :
+
+- Un projet plus avancé d’analyse de sentiments
+- Une implémentation avec du deep learning (RNN, BERT, etc.)
+- L’ajout d’une interface Flask pour tester les prédictions
+
+## 👨‍💻 Auteur
+
+Richard Chazal – Data Scientist en reconversion, spécialisé en sciences de la vie et traitement de données scientifiques.
+

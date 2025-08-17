@@ -1,67 +1,76 @@
-# NLP Project – Classification de commentaires selon leur toxicité
+📝 NLP Project – Classification de commentaires selon leur toxicité
 
-Ce projet a été réalisé dans le cadre de mon apprentissage du traitement automatique du langage naturel (NLP). L’objectif était de m’initier à l’analyse de texte brut, à la vectorisation et à la classification supervisée, à partir de données publiques issues d’un concours Kaggle.
+Ce projet a été réalisé dans le cadre de mon apprentissage du traitement automatique du langage naturel (NLP) et de la classification supervisée.
+L’objectif était de construire un pipeline complet allant du nettoyage des textes à la modélisation, puis de comparer différentes approches classiques du machine learning.
 
-## 🎯 Objectif
+🎯 Objectif
 
-Classer automatiquement les commentaires en ligne selon plusieurs types de toxicité :
+Classer automatiquement des commentaires en ligne selon plusieurs types de toxicité (multi-label) :
+toxic
+severe_toxic
+obscene
+threat
+insult
+identity_hate
 
-- `toxic`
-- `severe_toxic`
-- `obscene`
-- `threat`
-- `insult`
-- `identity_hate`
+🗃 Données
 
-## 🗃 Données
+Jeu de données : Toxic Comment Classification Challenge – Kaggle
+train.csv : ~160 000 commentaires avec labels (multi-label)
+test.csv : ~150 000 commentaires sans labels
 
-Les données sont issues du jeu de données [Toxic Comment Classification Challenge – Kaggle](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge):
+🔧 Pipeline de traitement
+1. Prétraitement des données
 
-- `train.csv` : 160 000 commentaires avec labels (multi-label)
-- `test.csv` : 150 000 commentaires sans labels
+Nettoyage des textes (regex, suppression des liens, chiffres, caractères spéciaux)
+Tokenisation (RegexpTokenizer)
+Analyse exploratoire : longueur des phrases, distribution des classes (déséquilibre fort)
 
-## 🔧 Pipeline de traitement
+2. Vectorisation
 
-### 1. **Prétraitement des données**
-- Nettoyage des textes (regex, suppression de liens, chiffres, caractères spéciaux, etc.)
-- Tokenisation (`RegexpTokenizer`)
-- Analyse de la longueur des phrases et vocabulaire
+TF-IDF (TfidfVectorizer) appliqué sur l’ensemble des textes
 
-### 2. **Vectorisation**
-- Utilisation de la méthode **TF-IDF** (`TfidfVectorizer`)
-- Application sur l’ensemble des textes
+3. Modélisation & Expérimentations
+   
+Baseline
+Régression logistique (un classifieur par label)
+Gestion du déséquilibre
+Application de SMOTE : nette amélioration du recall et du F1-score pour les classes minoritaires
+Modèles testés
+Régression logistique (avec et sans SMOTE)
+Random Forest
+XGBoost
+Réduction de dimensions (TruncatedSVD) : testée mais peu concluante (perte de recall)
+Validation
+Découpage train/validation avec stratification
+Évaluation via : accuracy, precision, recall, F1-score, et matrices de confusion
 
-### 3. **Modélisation**
-- Entraînement d’un modèle de **régression logistique** pour chaque label (multi-sortie)
-- Évaluation empirique des résultats via inspection des prédictions
-- Génération d’un fichier de soumission (`submission.csv`) avec les probabilités de toxicité
+📊 Résultats
 
-## ⚙️ Outils et bibliothèques
+Régression logistique (baseline) : bons résultats globaux, mais recall limité sur les classes rares.
+Régression logistique + SMOTE : amélioration claire du F1 sur les classes minoritaires.
+Random Forest : précision correcte, mais recall insuffisant.
+XGBoost : performances comparables à la régression logistique, mais plus coûteux en ressources.
+TruncatedSVD : réduction de dimensions testée, mais perte d’information sur ce type de données.
 
-- `pandas`, `numpy`, `matplotlib`, `seaborn`
-- `nltk`, `scikit-learn`
-- `re` pour les expressions régulières
+👉 Conclusion : pour ce problème, un modèle simple (régression logistique + SMOTE) surpasse ou égale les modèles plus complexes.
 
-## 📊 Résultats
+⚙️ Outils et bibliothèques
 
-Le modèle a généré des probabilités de classification pour chaque commentaire sur les six dimensions. À cette étape, aucune métrique n’a été calculée, l’objectif étant d’établir un prototype simple et fonctionnel.
+Data science : pandas, numpy, matplotlib, seaborn
+NLP & ML : nltk, scikit-learn, imblearn, xgboost
+Divers : re (expressions régulières)
 
-Exemple de sortie (`submission.csv`) :
+🧠 Perspectives
 
-| id              | toxic | severe_toxic | obscene | threat | insult | identity_hate |
-|-----------------|-------|--------------|---------|--------|--------|----------------|
-| 00001cee341fdb12 | 0.997 | 0.160        | 0.992   | 0.039  | 0.948  | 0.246          |
-| ...             | ...   | ...          | ...     | ...    | ...    | ...            |
+Ce projet m’a permis d’explorer plusieurs points clés :
+Importance de la gestion du déséquilibre des classes
+Comparaison modèles simples vs. complexes
+Limites de la réduction de dimensions pour du texte vectorisé
 
-## 🧠 Perspectives
+Prochaines pistes :
+Tester des modèles NLP avancés (Word2Vec, BERT, DistilBERT)
+Explorer des approches deep learning (RNN, LSTM, transformers)
 
-Ce projet constitue une première approche des problématiques NLP. Il servira de base pour :
-
-- Un projet plus avancé d’analyse de sentiments
-- Une implémentation avec du deep learning (RNN, BERT, etc.)
-- L’ajout d’une interface Flask pour tester les prédictions
-
-## 👨‍💻 Auteur
-
-Richard Chazal – Data Scientist en reconversion, spécialisé en sciences de la vie et traitement de données scientifiques.
+Développer une petite interface web (Flask/Streamlit) pour tester les prédictions en direct
 
